@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BPM Log · OBS Overlay</title><link rel="stylesheet" href="/style.css"><body class="overlay"><div class="overlay-stage" id="stage"><div class="peak-banner" id="peak">🔥 PEAK #1</div><section class="overlay-shell"><div class="overlay-stat"><div class="label"><span class="heart pink">♥</span> Streamer</div><div class="value pink number"><span id="streamer">80</span><span class="unit">BPM</span></div><span class="small">SIMULATED HEART RATE</span></div><div class="overlay-stat"><div class="label">✳ Crowd energy</div><div class="value cyan number"><span id="crowd">60</span><span class="unit">BPM</span></div><span class="small">THE PULSE OF YOUR CHAT</span></div><div class="overlay-chart"><div class="overlay-top"><span class="brand">bpm<b>log</b><span style="font-size:12px;color:#8492a8;letter-spacing:2px;margin-left:16px">LIVE HEARTBEAT</span></span><span class="badge" id="mode">DEMO</span></div><svg class="chart" id="graph" aria-label="Streamer and crowd BPM graph"></svg><div class="legend"><span>Streamer</span><span>Crowd</span></div></div></section><div class="overlay-connection" id="connection">CONNECTING…</div></div><script type="module">
+import { $, connect, graph, stats } from '/live.js';
+// Preserve the OBS composition at every viewport size, with transparent letterboxing.
+function fitStage() {
+  const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  $('#stage').style.setProperty('--stage-scale', scale);
+}
+fitStage();
+window.addEventListener('resize', fitStage);
+let showId, seen = 0, hide;
+connect(s => { if(s.showId !== showId){ showId=s.showId;seen=0;clearTimeout(hide);$('#peak').classList.remove('show'); } stats(s);graph($('#graph'),s);$('#mode').textContent=s.status.connected?'TWITCH LIVE':'DEMO MODE';$('#connection').textContent='● LIVE DATA · 2s';const peak=s.peaks.at(-1);if(peak && peak.id>seen){seen=peak.id;if(s.time-peak.detectedAt<12000){$('#peak').textContent=`🔥 PEAK #${peak.id} · ${peak.maxCrowdBpm} BPM`;$('#peak').classList.add('show');clearTimeout(hide);hide=setTimeout(()=>$('#peak').classList.remove('show'),10000);}} });
+</script></body></html>

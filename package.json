@@ -1,0 +1,1 @@
+{"name":"bpm-log-twitch","version":"1.0.0","private":true,"type":"module","scripts":{"start":"node --env-file=.env server.js","test":"node --test"},"engines":{"node":">=22"},"dependencies":{"express":"^4.21.2","ws":"^8.18.3"}}
